@@ -1,5 +1,6 @@
 package com.tsenyurt.csdm.domain;
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
@@ -49,5 +50,17 @@ public class RSSItem implements Serializable {
   private Date updateTime;
 
   private String imageUrl;
+
+  public static RSSItem createInstance(SyndEntry item)
+  {
+    return  RSSItem.builder().
+        url(item.getUri()).
+        title(item.getTitle()).
+        description(item.getDescription() ==null?"":item.getDescription().getValue()).
+        publication(item.getPublishedDate()).
+        //updateTime(item.getUpdatedDate().toInstant()).
+            imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
+        .build();
+  }
 
 }
