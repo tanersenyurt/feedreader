@@ -9,3 +9,5 @@
 
 rootProject.name = 'feedreader'
 include('app', 'list', 'utilities')
+include 'feed-api'
+
