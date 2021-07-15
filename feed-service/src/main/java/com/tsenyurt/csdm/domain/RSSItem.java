@@ -1,6 +1,7 @@
 package com.tsenyurt.csdm.domain;
 
 import com.rometools.rome.feed.synd.SyndEntry;
+import com.tsenyurt.csdm.view.RssItemView;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -59,8 +60,21 @@ public class RSSItem implements Serializable {
         title(item.getTitle()).
         description(item.getDescription() ==null?"":item.getDescription().getValue()).
         publication(item.getPublishedDate()).
-        //updateTime(item.getUpdatedDate().toInstant()).
-            imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
+        updateTime(item.getUpdatedDate()).
+        imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
+        .build();
+  }
+
+  public static RssItemView convertToView(RSSItem it)
+  {
+    return  RssItemView.builder().
+        id(it.getId()).
+        url(it.getUrl()).
+        title(it.getTitle()).
+        description(it.getDescription()).
+        publication(it.getPublication()).
+        updateTime(it.getUpdateTime()).
+        imageUrl(it.getImageUrl())
         .build();
   }
 

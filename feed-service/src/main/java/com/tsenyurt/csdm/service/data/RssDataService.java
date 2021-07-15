@@ -1,9 +1,9 @@
 package com.tsenyurt.csdm.service.data;
 
-import com.tsenyurt.csdm.domain.RSSItem;
+import com.tsenyurt.csdm.view.RssItemView;
 import java.util.List;
 
 public interface RssDataService {
-  public List<RSSItem> readFromExternalFeed() throws Exception;
-
+  public List<RssItemView> readFromExternalFeed() throws Exception;
+  public List<RssItemView> getLatestRssFeedsFromExternalSource();
 }
