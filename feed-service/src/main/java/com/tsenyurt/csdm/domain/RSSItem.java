@@ -2,6 +2,7 @@ package com.tsenyurt.csdm.domain;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -61,6 +62,16 @@ public class RSSItem implements Serializable {
         //updateTime(item.getUpdatedDate().toInstant()).
             imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
         .build();
+  }
+
+  public String getPublicationAsString()
+  {
+    if(publication != null)
+    {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+      return sdf.format(publication);
+    }
+    return "";
   }
 
 }
