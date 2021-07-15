@@ -8,7 +8,7 @@
 ### Configurations
 To get ready coding and development follow these:
 
-* Enable annotation processing to enable lombok etc...
+* Enable annotation processing to enable lombok 
 
 basic graphql from graphiql UI 
 query {
