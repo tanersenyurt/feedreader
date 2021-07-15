@@ -2,13 +2,24 @@ plugins {
     id 'java'
 }
 
-version 'unspecified'
+group 'com.tsenyurt.csdm'
+version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    implementation 'org.projectlombok:lombok:1.18.16'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.4.3'
+    implementation("com.google.guava:guava:30.1.1-jre")
+
+    //https://stackoverflow.com/questions/2729027/java-library-for-reading-rss-and-atom-feeds
+    // https://mvnrepository.com/artifact/com.rometools/rome
+    implementation group: 'com.rometools', name: 'rome', version: '1.16.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
