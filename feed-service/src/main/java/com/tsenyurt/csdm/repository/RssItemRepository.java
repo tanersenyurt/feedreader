@@ -13,5 +13,6 @@ public interface RssItemRepository  extends JpaRepository<RSSItem, Long> {
 
   RSSItem findByUrl(String url);
 
+  @Query("select r from RSSItem r where r.url in ( :urls )")
   List<RSSItem> findByUrlList(List<String> urls);
 }

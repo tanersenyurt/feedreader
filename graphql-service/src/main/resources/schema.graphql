@@ -1,0 +1,18 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+}
+
+type Query {
+    allRSSItems: [RSSItem]
+    rssItem(url: String): RSSItem
+}
+
+type RSSItem {
+    description: String!
+    imageUrl: String!
+    publication: String!
+    title: String!
+    url: String!
+}

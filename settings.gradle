@@ -10,4 +10,5 @@
 rootProject.name = 'feedreader'
 include 'feed-api'
 include 'feed-service'
+include 'graphql-service'
 
