@@ -1,6 +1,7 @@
 package com.tsenyurt.csdm.view;
 
 import com.rometools.rome.feed.synd.SyndEntry;
+import com.tsenyurt.csdm.domain.RSSItem;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Builder;
@@ -30,6 +31,18 @@ public class RssItemView implements Serializable {
         publication(item.getPublishedDate()).
         updateTime(item.getUpdatedDate()).
         imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
+        .build();
+  }
+
+  public static RSSItem createEntity(RssItemView item)
+  {
+    return RSSItem.builder()
+        .url(item.getUrl())
+        .title(item.getTitle())
+        .description(item.getDescription())
+        .publication(item.getPublication())
+        .updateTime(item.getUpdateTime())
+        .imageUrl(item.getImageUrl())
         .build();
   }
 }
