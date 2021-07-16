@@ -48,9 +48,9 @@ public class RssBusinessServiceImpl implements RssBusinessService {
       List<RSSItem> dbRecordsOfUrls =
           rssItemRepository.findByUrlList(urlLists); // if returns from db it means already in db
 
-      if (dbRecordsOfUrls.size() == 0
+      if (dbRecordsOfUrls.size() == ZERO_INT
           && Long.compare(dbcount, 0l)
-              == 0) // there is no record with according url in db so we can save all
+              == ZERO_INT) // there is no record with according url in db so we can save all
       {
         List<RSSItem> feedsToSave =
             latestRssFeedsFromExternalSource.stream()

@@ -1,10 +1,8 @@
 package com.tsenyurt.csdm.domain;
 
-import com.rometools.rome.feed.synd.SyndEntry;
 import com.tsenyurt.csdm.view.RssItemView;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +12,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +30,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @EqualsAndHashCode(of = "url")
 @ToString(of = {"url", "title"})
 public class RSSItem implements Serializable {
+
+  public static final String DD_MM_YYYY_HH_MM_DATE_FORMAT = "dd.MM.yyyy HH:mm";
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rssitem_seq_gen")
@@ -53,18 +52,6 @@ public class RSSItem implements Serializable {
 
   private String imageUrl;
 
-  public static RSSItem createInstance(SyndEntry item)
-  {
-    return  RSSItem.builder().
-        url(item.getUri()).
-        title(item.getTitle()).
-        description(item.getDescription() ==null?"":item.getDescription().getValue()).
-        publication(item.getPublishedDate()).
-        updateTime(item.getUpdatedDate()).
-        imageUrl(item.getEnclosures().get(0).getUrl()) //TODO:Handle none
-        .build();
-  }
-
   public static RssItemView convertToView(RSSItem it)
   {
     return  RssItemView.builder().
@@ -82,8 +69,18 @@ public class RSSItem implements Serializable {
   {
     if(publication != null)
     {
-      SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+      SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
       return sdf.format(publication);
+    }
+    return "";
+  }
+
+  public String getUpdateTimeAsString()
+  {
+    if(updateTime != null)
+    {
+      SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
+      return sdf.format(updateTime);
     }
     return "";
   }
