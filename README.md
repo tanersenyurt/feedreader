@@ -14,6 +14,6 @@ After environment ready just go to the path of the project and run "gradle bootR
 
 ![gradle bootRun](resources/gradle.png?raw=true)
 
-basic graphql from graphiql UI query { allRSSItems { url, title } }
+basic graphql from graphiql UI query { allRSSItems { url, title , publication, imageUrl } }
 
 ![grapql sample](resources/graphql.png?raw=true)
