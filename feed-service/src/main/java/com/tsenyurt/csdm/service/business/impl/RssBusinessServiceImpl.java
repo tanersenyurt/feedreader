@@ -2,7 +2,6 @@ package com.tsenyurt.csdm.service.business.impl;
 
 import static com.tsenyurt.csdm.service.ProcessType.ASYNC;
 
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.tsenyurt.csdm.domain.RSSItem;
 import com.tsenyurt.csdm.repository.RssItemRepository;
@@ -33,17 +32,11 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 public class RssBusinessServiceImpl implements RssBusinessService {
 
-  @Value("${rss.max.stored.record.count.in.db:10}")
-  public Integer maxDbRecordAllowed;
-
   @Value("${async.process.queue.size:100}")
   public Integer queueSize;
 
   @Value("${async.process.thread.size:3}")
   public Integer threadSize;
-
-  @Value("${async.process.thread.sleep:3}")
-  public Integer threadSleep;
 
   @Value("${feed.process.type:ASYNC}")
   public String processType;
@@ -53,7 +46,8 @@ public class RssBusinessServiceImpl implements RssBusinessService {
   private RssItemRepository rssItemRepository;
 
   @Getter private BlockingQueue<RssItemView> blockingQueue = new LinkedBlockingDeque<>(100);
-  ;
+
+  //Might be two business implementatiton like syncImpl and asyncImpl
   Runnable consumerTask =
       () -> {
         try {
@@ -66,10 +60,6 @@ public class RssBusinessServiceImpl implements RssBusinessService {
               RSSItem item = rssItemRepository.findByUrl(rssItemView.getUrl());
               if (item == null) // item must save
               {
-                Long recordCount = rssItemRepository.countAllRecords();
-                if (Long.compare(recordCount, Long.valueOf(maxDbRecordAllowed)) == 1) {
-                  rssItemRepository.removeOldestRecord();
-                }
                 rssItemRepository.save(RssItemView.createEntity(rssItemView));
 
               } else if (rssItemView.getUpdateTime() != null
@@ -78,15 +68,14 @@ public class RssBusinessServiceImpl implements RssBusinessService {
                           rssItemView
                               .getUpdateTime())) // item updated in feed so must be updated in DB
               {
-                item.setDescription(rssItemView.getDescription());
-                item.setTitle(rssItemView.getTitle());
+                updateRssItemInfos(rssItemView, item);
                 rssItemRepository.save(item);
               }
 
             } catch (Exception e) {
               log.error(
                   String.format(
-                      "ConsumerTask => error occur while saving/deleting data: %s",
+                      "ConsumerTask => error occur while saving/updating data: %s",
                       ExceptionUtil.convertStackTraceToString(e, 1000)));
             }
             Thread.sleep(new Random().nextInt(1500));
@@ -98,6 +87,13 @@ public class RssBusinessServiceImpl implements RssBusinessService {
                   ExceptionUtil.convertStackTraceToString(e, 1000)));
         }
       };
+
+  private void updateRssItemInfos(RssItemView rssItemView, RSSItem item) {
+    item.setDescription(rssItemView.getDescription());
+    item.setTitle(rssItemView.getTitle());
+    item.setUpdateTime(rssItemView.getUpdateTime());
+  }
+
   private ThreadFactory namedThreadFactory =
       new ThreadFactoryBuilder().setNameFormat("AsyncRssProcessor").build();
   @Getter private ExecutorService executor = Executors.newFixedThreadPool(10, namedThreadFactory);
@@ -127,15 +123,13 @@ public class RssBusinessServiceImpl implements RssBusinessService {
     try {
       List<RssItemView> latestRssFeedsFromExternalSource =
           rssDataService.getLatestRssFeedsFromExternalSource();
-      Long dbcount = rssItemRepository.countAllRecords();
       List<String> urlLists =
           latestRssFeedsFromExternalSource.stream().map(rssItemToUrl).collect(Collectors.toList());
       List<RSSItem> dbRecordsOfUrls =
           rssItemRepository.findByUrlList(urlLists); // if returns from db it means already in db
 
-      if (dbRecordsOfUrls.size() == ZERO_INT
-          && Long.compare(dbcount, 0l)
-              == ZERO_INT) // there is no record with according url in db so we can save all
+      if (dbRecordsOfUrls.size()
+          == ZERO_INT) // there is no record with according url in db so we can save all
       {
         List<RSSItem> feedsToSave =
             latestRssFeedsFromExternalSource.stream()
@@ -152,9 +146,7 @@ public class RssBusinessServiceImpl implements RssBusinessService {
                     && extFeed.getUpdateTime().after(dbFeed.getPublication());
             if (dbFeed.getUrl().equals(extFeed.getUrl())
                 && isFeedUpdated) { // then is must bu updated in db too
-              dbFeed.setDescription(extFeed.getDescription());
-              dbFeed.setTitle(extFeed.getTitle());
-              dbFeed.setUpdateTime(extFeed.getUpdateTime());
+              updateRssItemInfos(extFeed, dbFeed);
               try {
                 rssItemRepository.save(dbFeed);
               } catch (Exception e) {
@@ -166,33 +158,7 @@ public class RssBusinessServiceImpl implements RssBusinessService {
             }
           }
         }
-
-        // Not in db so will be added but db records count must be limited according to
-        // rss.max.stored.record.count.in.db param
-        List<RssItemView> fromSourceList =
-            Lists.newArrayList(
-                latestRssFeedsFromExternalSource); // In the end , there will be only the records
-        // not stored yet
-        for (RSSItem dbfeed : dbRecordsOfUrls) {
-          for (RssItemView extFeed : latestRssFeedsFromExternalSource) {
-            if (dbfeed.getUrl().equals(extFeed.getUrl())) {
-              fromSourceList.remove(extFeed);
-            }
-          }
-        }
-
-        for (RssItemView feedsToSave : fromSourceList) {
-          try {
-            saveNewRssFeed(feedsToSave);
-          } catch (Exception e) {
-            log.error(
-                String.format(
-                    "while saving url[%s] entity error occurd!  [%s]",
-                    feedsToSave.getUrl(), e.getMessage()));
-          }
-        }
       }
-
     } catch (Exception e) {
       log.error("while updateRssFeedsInDb method processing exception happened " + e.getMessage());
     }
@@ -204,18 +170,5 @@ public class RssBusinessServiceImpl implements RssBusinessService {
       executor.execute(consumerTask);
     }
     log.info("startAsyncQueue -----> STARTED");
-  }
-
-  /**
-   * //TODO: Should be in different service for @Transactional purpose
-   *
-   * @param feedsToSave
-   */
-  private void saveNewRssFeed(RssItemView feedsToSave) {
-    Long count = rssItemRepository.countAllRecords();
-    if (Long.compare(count, 0l) == 1) {
-      rssItemRepository.removeOldestRecord();
-    }
-    rssItemRepository.save(feedsToSave.createEntity(feedsToSave));
   }
 }

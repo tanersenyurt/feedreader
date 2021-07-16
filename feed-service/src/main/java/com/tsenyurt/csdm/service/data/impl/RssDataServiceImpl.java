@@ -23,9 +23,6 @@ public class RssDataServiceImpl implements RssDataService {
   @Value("${external.feed.url}")
   public String rssFeedUrl;
 
-  @Value("${rss.max.stored.record.count.in.db:10}")
-  public Integer maxDbRecordAllowed;
-
   @Autowired
   public RssDataServiceImpl() {}
 
@@ -56,8 +53,7 @@ public class RssDataServiceImpl implements RssDataService {
       resultList =
           rssItemViews.stream()
               .sorted(Comparator.comparing(RssItemView::getPublication).reversed())
-              .collect(Collectors.toList())
-              .subList(0, maxDbRecordAllowed);
+              .collect(Collectors.toList());
 
     } catch (Exception e) {
       log.error(
