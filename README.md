@@ -1,7 +1,7 @@
 # NOTES for DEVs
 
 ### Environment
-* jdk 11 (11.0.9)
+* jdk 11 
 * To access h2 embedded db  : [{host}:{port}/h2-console](http://localhost:8080/h2-console)
 * To access Graphiql UI     : [{host}:{port}/graphiql](http://localhost:8080/graphiql)
 

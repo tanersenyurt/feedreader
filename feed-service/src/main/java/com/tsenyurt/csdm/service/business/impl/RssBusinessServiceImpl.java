@@ -40,12 +40,17 @@ public class RssBusinessServiceImpl implements RssBusinessService {
   @Scheduled(fixedRateString = "${rss.fetch.in.milliseconds:300000}") // 5*60*1000 => 5 minutes
   public void updateRssFeedsInDb() {
     try {
-      List<RssItemView> latestRssFeedsFromExternalSource =  rssDataService.getLatestRssFeedsFromExternalSource();
+      List<RssItemView> latestRssFeedsFromExternalSource =
+          rssDataService.getLatestRssFeedsFromExternalSource();
       Long dbcount = rssItemRepository.countAllRecords();
-      List<String> urlLists = latestRssFeedsFromExternalSource.stream().map(rssItemToUrl).collect(Collectors.toList());
-      List<RSSItem> dbRecordsOfUrls = rssItemRepository.findByUrlList(urlLists); // if returns from db it means already in db
+      List<String> urlLists =
+          latestRssFeedsFromExternalSource.stream().map(rssItemToUrl).collect(Collectors.toList());
+      List<RSSItem> dbRecordsOfUrls =
+          rssItemRepository.findByUrlList(urlLists); // if returns from db it means already in db
 
-      if (dbRecordsOfUrls.size() == 0 && Long.compare(dbcount, 0l) == 0) // there is no record with according url in db so we can save all
+      if (dbRecordsOfUrls.size() == 0
+          && Long.compare(dbcount, 0l)
+              == 0) // there is no record with according url in db so we can save all
       {
         List<RSSItem> feedsToSave =
             latestRssFeedsFromExternalSource.stream()
@@ -57,8 +62,11 @@ public class RssBusinessServiceImpl implements RssBusinessService {
         // Check stored feed updated ?
         for (RSSItem dbFeed : dbRecordsOfUrls) {
           for (RssItemView extFeed : latestRssFeedsFromExternalSource) {
-            boolean isFeedUpdated =  extFeed.getUpdateTime() != null  && extFeed.getUpdateTime().after(dbFeed.getPublication());
-            if (dbFeed.getUrl().equals(extFeed.getUrl())  && isFeedUpdated) { // then is must bu updated in db too
+            boolean isFeedUpdated =
+                extFeed.getUpdateTime() != null
+                    && extFeed.getUpdateTime().after(dbFeed.getPublication());
+            if (dbFeed.getUrl().equals(extFeed.getUrl())
+                && isFeedUpdated) { // then is must bu updated in db too
               dbFeed.setDescription(extFeed.getDescription());
               dbFeed.setTitle(extFeed.getTitle());
               dbFeed.setUpdateTime(extFeed.getUpdateTime());
@@ -79,7 +87,7 @@ public class RssBusinessServiceImpl implements RssBusinessService {
         List<RssItemView> fromSourceList =
             Lists.newArrayList(
                 latestRssFeedsFromExternalSource); // In the end , there will be only the records
-                                                   // not stored yet
+        // not stored yet
         for (RSSItem dbfeed : dbRecordsOfUrls) {
           for (RssItemView extFeed : latestRssFeedsFromExternalSource) {
             if (dbfeed.getUrl().equals(extFeed.getUrl())) {
