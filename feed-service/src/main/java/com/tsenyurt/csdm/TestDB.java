@@ -24,7 +24,7 @@ public class TestDB {
 
       /*rssDataService.readFromExternalFeed();*/
 
-      businessService.updateRssFeedsInDb();
+      /*businessService.startAsyncQueue();*/
     };
   }
 }

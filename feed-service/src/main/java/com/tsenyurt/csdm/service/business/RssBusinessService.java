@@ -8,4 +8,6 @@ public interface RssBusinessService {
   public static Function<RssItemView, String> rssItemToUrl = item -> item.getUrl();
 
   public void updateRssFeedsInDb();
+
+  public void startAsyncQueue();
 }
