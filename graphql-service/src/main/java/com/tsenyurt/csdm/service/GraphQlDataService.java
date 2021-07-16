@@ -1,5 +1,3 @@
 package com.tsenyurt.csdm.service;
 
-public interface GraphQlDataService {
-
-}
+public interface GraphQlDataService {}

@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class ContextInitializedListener implements ApplicationListener<ContextRefreshedEvent> {
-  @Autowired
-  private RssBusinessService businessService;
+  @Autowired private RssBusinessService businessService;
 
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {

@@ -10,17 +10,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RssItemRepository  extends JpaRepository<RSSItem, Long> {
+public interface RssItemRepository extends JpaRepository<RSSItem, Long> {
   @Query("select count(r) from RSSItem r")
   Long countAllRecords();
 
-  RSSItem findByUrl( String url);
+  RSSItem findByUrl(String url);
 
   @Query("select r from RSSItem r where r.url in ( :urls )")
-  List<RSSItem> findByUrlList(@Param("urls")List<String> urls);
+  List<RSSItem> findByUrlList(@Param("urls") List<String> urls);
 
   @Transactional
   @Modifying
-  @Query(value = "delete from RSS.RSS_ITEM r where r.publication = (select  min(x.publication) from RSS.RSS_ITEM x )",nativeQuery = true)
+  @Query(
+      value =
+          "delete from RSS.RSS_ITEM r where r.publication = (select  min(x.publication) from RSS.RSS_ITEM x )",
+      nativeQuery = true)
   int removeOldestRecord();
 }

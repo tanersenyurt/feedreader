@@ -52,37 +52,31 @@ public class RSSItem implements Serializable {
 
   private String imageUrl;
 
-  public static RssItemView convertToView(RSSItem it)
-  {
-    return  RssItemView.builder().
-        id(it.getId()).
-        url(it.getUrl()).
-        title(it.getTitle()).
-        description(it.getDescription()).
-        publication(it.getPublication()).
-        updateTime(it.getUpdateTime()).
-        imageUrl(it.getImageUrl())
+  public static RssItemView convertToView(RSSItem it) {
+    return RssItemView.builder()
+        .id(it.getId())
+        .url(it.getUrl())
+        .title(it.getTitle())
+        .description(it.getDescription())
+        .publication(it.getPublication())
+        .updateTime(it.getUpdateTime())
+        .imageUrl(it.getImageUrl())
         .build();
   }
 
-  public String getPublicationAsString()
-  {
-    if(publication != null)
-    {
+  public String getPublicationAsString() {
+    if (publication != null) {
       SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
       return sdf.format(publication);
     }
     return "";
   }
 
-  public String getUpdateTimeAsString()
-  {
-    if(updateTime != null)
-    {
+  public String getUpdateTimeAsString() {
+    if (updateTime != null) {
       SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
       return sdf.format(updateTime);
     }
     return "";
   }
-
 }

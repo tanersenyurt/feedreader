@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GraphQlDataServiceImpl implements GraphQlDataService, GraphQLQueryResolver {
-  //https://www.pluralsight.com/guides/building-a-graphql-server-with-spring-boot
+  // https://www.pluralsight.com/guides/building-a-graphql-server-with-spring-boot
   private RssItemRepository repository;
 
   @Autowired

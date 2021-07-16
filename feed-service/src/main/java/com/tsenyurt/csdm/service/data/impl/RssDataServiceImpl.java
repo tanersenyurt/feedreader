@@ -40,7 +40,10 @@ public class RssDataServiceImpl implements RssDataService {
 
       return rssItems;
     } catch (FeedException e) {
-      log.error(String.format("RssDataServiceImpl.readFromExternalFeed() during http call exception happened! Reason:[%s]",e.getMessage()));
+      log.error(
+          String.format(
+              "RssDataServiceImpl.readFromExternalFeed() during http call exception happened! Reason:[%s]",
+              e.getMessage()));
     }
     return null;
   }
@@ -57,7 +60,10 @@ public class RssDataServiceImpl implements RssDataService {
               .subList(0, maxDbRecordAllowed);
 
     } catch (Exception e) {
-      log.error(String.format("RssDataServiceImpl.getLatestRssFeedsFromExternalSource() during http call exception happened! Reason:[%s]",e.getMessage()));
+      log.error(
+          String.format(
+              "RssDataServiceImpl.getLatestRssFeedsFromExternalSource() during http call exception happened! Reason:[%s]",
+              e.getMessage()));
     }
     return resultList;
   }

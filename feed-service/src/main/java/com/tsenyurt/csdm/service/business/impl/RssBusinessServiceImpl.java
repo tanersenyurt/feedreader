@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.tsenyurt.csdm.domain.RSSItem;
 import com.tsenyurt.csdm.repository.RssItemRepository;
-import com.tsenyurt.csdm.service.ProcessType;
 import com.tsenyurt.csdm.service.business.RssBusinessService;
 import com.tsenyurt.csdm.service.data.RssDataService;
 import com.tsenyurt.csdm.service.util.ExceptionUtil;
@@ -53,11 +52,55 @@ public class RssBusinessServiceImpl implements RssBusinessService {
 
   private RssItemRepository rssItemRepository;
 
-  @Getter
-  private BlockingQueue<RssItemView> blockingQueue = new LinkedBlockingDeque<>(100); ;
-  private ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("AsyncRssProcessor").build();
-  @Getter
-  private ExecutorService executor = Executors.newFixedThreadPool(10 , namedThreadFactory);
+  @Getter private BlockingQueue<RssItemView> blockingQueue = new LinkedBlockingDeque<>(100);
+  ;
+  Runnable consumerTask =
+      () -> {
+        try {
+          while (true) {
+            RssItemView rssItemView = getBlockingQueue().take();
+            log.info(
+                String.format(
+                    "ConsumerTask => for url: %s starting to process", rssItemView.getUrl()));
+            try {
+              RSSItem item = rssItemRepository.findByUrl(rssItemView.getUrl());
+              if (item == null) // item must save
+              {
+                Long recordCount = rssItemRepository.countAllRecords();
+                if (Long.compare(recordCount, Long.valueOf(maxDbRecordAllowed)) == 1) {
+                  rssItemRepository.removeOldestRecord();
+                }
+                rssItemRepository.save(RssItemView.createEntity(rssItemView));
+
+              } else if (rssItemView.getUpdateTime() != null
+                  && item.getPublication()
+                      .before(
+                          rssItemView
+                              .getUpdateTime())) // item updated in feed so must be updated in DB
+              {
+                item.setDescription(rssItemView.getDescription());
+                item.setTitle(rssItemView.getTitle());
+                rssItemRepository.save(item);
+              }
+
+            } catch (Exception e) {
+              log.error(
+                  String.format(
+                      "ConsumerTask => error occur while saving/deleting data: %s",
+                      ExceptionUtil.convertStackTraceToString(e, 1000)));
+            }
+            Thread.sleep(new Random().nextInt(1500));
+          }
+        } catch (Exception e) {
+          log.error(
+              String.format(
+                  "ConsumerTask => error occur while: %s",
+                  ExceptionUtil.convertStackTraceToString(e, 1000)));
+        }
+      };
+  private ThreadFactory namedThreadFactory =
+      new ThreadFactoryBuilder().setNameFormat("AsyncRssProcessor").build();
+  @Getter private ExecutorService executor = Executors.newFixedThreadPool(10, namedThreadFactory);
 
   @Autowired
   public RssBusinessServiceImpl(
@@ -69,15 +112,13 @@ public class RssBusinessServiceImpl implements RssBusinessService {
   @Override
   @Scheduled(fixedRateString = "${rss.fetch.in.milliseconds:300000}") // 5*60*1000 => 5 minutes
   public void updateRssFeedsInDb() {
-    log.info(String.format("updateRssFeedsInDb -----> STARTED ::: [ %s ]",processType));
-    if(ASYNC.name().equalsIgnoreCase(processType))
-    {
-      List<RssItemView> extFeeds =  rssDataService.getLatestRssFeedsFromExternalSource();
+    log.info(String.format("updateRssFeedsInDb -----> STARTED ::: [ %s ]", processType));
+    if (ASYNC.name().equalsIgnoreCase(processType)) {
+      List<RssItemView> extFeeds = rssDataService.getLatestRssFeedsFromExternalSource();
       for (RssItemView extFeed : extFeeds) {
         getBlockingQueue().add(extFeed);
       }
-    }else
-    {
+    } else {
       syncProcess();
     }
   }
@@ -159,50 +200,11 @@ public class RssBusinessServiceImpl implements RssBusinessService {
 
   @Override
   public void startAsyncQueue() {
-    for (int i = 0; i < threadSize; i++)
-    {
+    for (int i = 0; i < threadSize; i++) {
       executor.execute(consumerTask);
     }
     log.info("startAsyncQueue -----> STARTED");
   }
-
-
-  Runnable consumerTask = () -> {
-    try {
-      while (true) {
-        RssItemView rssItemView = getBlockingQueue().take();
-        log.info(String.format("ConsumerTask => for url: %s starting to process",rssItemView.getUrl() ));
-        try
-        {
-          RSSItem item = rssItemRepository.findByUrl(rssItemView.getUrl());
-          if(item == null) //item must save
-          {
-            Long recordCount = rssItemRepository.countAllRecords();
-            if(Long.compare(recordCount,Long.valueOf(maxDbRecordAllowed)) == 1)
-            {
-              rssItemRepository.removeOldestRecord();
-            }
-            rssItemRepository.save(RssItemView.createEntity(rssItemView));
-
-          }else if(rssItemView.getUpdateTime() != null && item.getPublication().before(rssItemView.getUpdateTime())) //item updated in feed so must be updated in DB
-          {
-            item.setDescription(rssItemView.getDescription());
-            item.setTitle(rssItemView.getTitle());
-            rssItemRepository.save(item);
-          }
-
-        }catch (Exception e)
-        {
-          log.error(String.format("ConsumerTask => error occur while saving/deleting data: %s", ExceptionUtil.convertStackTraceToString(e,1000)));
-        }
-        Thread.sleep(new Random().nextInt(1500));
-      }
-    } catch (Exception e)
-    {
-      log.error(String.format("ConsumerTask => error occur while: %s", ExceptionUtil.convertStackTraceToString(e,1000)));
-    }
-  };
-
 
   /**
    * //TODO: Should be in different service for @Transactional purpose

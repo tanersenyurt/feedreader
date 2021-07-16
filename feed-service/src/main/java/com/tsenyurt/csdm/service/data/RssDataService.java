@@ -5,5 +5,6 @@ import java.util.List;
 
 public interface RssDataService {
   public List<RssItemView> readFromExternalFeed() throws Exception;
+
   public List<RssItemView> getLatestRssFeedsFromExternalSource();
 }
