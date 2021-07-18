@@ -53,6 +53,8 @@ public class RSSItem implements Serializable {
   private String imageUrl;
 
   public static RssItemView convertToView(RSSItem it) {
+    if(it == null)
+      return null;
     return RssItemView.builder()
         .id(it.getId())
         .url(it.getUrl())
