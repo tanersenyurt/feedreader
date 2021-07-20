@@ -47,6 +47,9 @@ public class AsyncRssProcessServiceImpl extends BaseRssProcessImpl {
                 String.format(
                     "ConsumerTask => for url: %s starting to process", rssItemView.getUrl()));
             processRssItem(rssItemView);
+            log.info(
+                String.format(
+                    "ConsumerTask => for url: %s ending to process", rssItemView.getUrl()));
             Thread.sleep(new Random().nextInt(1500));
           }
         } catch (Exception e) {

@@ -21,6 +21,7 @@ public class ContextInitializedListener implements ApplicationListener<ContextRe
 
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {
+    log.info("#####=====> SPRING APPLICATION CONTEXT INITIALIZED  <=====#####");
     if (ASYNC == ProcessType.findFromName(processType)) {
       asyncRssProcessService.startAsyncQueue();
     }
