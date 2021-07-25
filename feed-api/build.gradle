@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.sonarqube" version "3.3"
     id 'java'
 }
 
@@ -43,4 +44,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "tanersenyurt_feedreader"
+        property "sonar.organization", "tanersenyurt"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
