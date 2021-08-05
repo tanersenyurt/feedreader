@@ -47,7 +47,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: '*.jar'
+        file: 'feed-api/build/libs/*.jar'
         release_id: ${{ steps.create_release.outputs.id }}
         draft: false
         tags: true
