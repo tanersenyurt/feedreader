@@ -31,25 +31,25 @@ jobs:
         name: Package
         path: feed-api/build/libs
     - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Test upload-to-github-release works with ```actions/create-release```
-          draft: true
-          prerelease: false
-          - uses: xresloader/upload-to-github-release@master
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              file: "*.jar"
-              delete_file: "*plain.jar"
-              release_id: ${{ steps.create_release.outputs.id }}
-              overwrite: true
-              verbose: true
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Test upload-to-github-release works with ```actions/create-release```
+        draft: true
+        prerelease: false
+        - uses: xresloader/upload-to-github-release@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            file: "*.jar"
+            delete_file: "*plain.jar"
+            release_id: ${{ steps.create_release.outputs.id }}
+            overwrite: true
+            verbose: true
       
       
