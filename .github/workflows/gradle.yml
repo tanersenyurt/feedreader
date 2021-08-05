@@ -29,7 +29,7 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: Package
-        path: build/libs
+        path: feed-api/build/libs
       
       
       
