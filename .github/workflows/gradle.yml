@@ -42,14 +42,14 @@ jobs:
           Test upload-to-github-release works with ```actions/create-release```
         draft: true
         prerelease: false
-        - uses: xresloader/upload-to-github-release@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            file: "*.jar"
-            delete_file: "*plain.jar"
-            release_id: ${{ steps.create_release.outputs.id }}
-            overwrite: true
-            verbose: true
+     - uses: xresloader/upload-to-github-release@master
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         file: "*.jar"
+         delete_file: "*plain.jar"
+         release_id: ${{ steps.create_release.outputs.id }}
+         overwrite: true
+         verbose: true
       
       
