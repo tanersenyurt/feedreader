@@ -8,6 +8,7 @@ import com.google.common.collect.*;
 import com.rometools.rome.feed.synd.*;
 import com.rometools.rome.io.*;
 import com.tsenyurt.csdm.service.data.*;
+import com.tsenyurt.csdm.service.data.impl.exception.*;
 import com.tsenyurt.csdm.view.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
@@ -24,22 +25,21 @@ public class RssDataServiceImpl implements RssDataService {
   public String rssFeedUrl;
 
   @Override
-  public List<RssItemView> readFromExternalFeed() throws Exception {
-    URL feedSource = new URL(rssFeedUrl);
-    SyndFeedInput input = new SyndFeedInput();
+  public List<RssItemView> readFromExternalFeed() throws FeedReadException {
+    List<RssItemView> rssItems = Lists.newArrayList();
     try {
+      URL feedSource = new URL(rssFeedUrl);
+      SyndFeedInput input = new SyndFeedInput();
       SyndFeed feed = input.build(new XmlReader(feedSource));
-      List<RssItemView> rssItems =
-          feed.getEntries().stream().map(RssItemView::createInstance).collect(Collectors.toList());
-
-      return rssItems;
-    } catch (FeedException e) {
+      rssItems = feed.getEntries().stream().map(RssItemView::createInstance).collect(Collectors.toList());
+    } catch (Exception e) {
       log.error(
           String.format(
               "RssDataServiceImpl.readFromExternalFeed() during http call exception happened! Reason:[%s]",
               e.getMessage()));
+      throw new FeedReadException(e.getMessage());
     }
-    return Collections.emptyList();
+    return rssItems;
   }
 
   @Override

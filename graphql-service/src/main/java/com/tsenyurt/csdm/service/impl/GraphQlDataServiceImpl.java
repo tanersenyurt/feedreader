@@ -1,16 +1,17 @@
 package com.tsenyurt.csdm.service.impl;
 
-import com.tsenyurt.csdm.domain.RSSItem;
-import com.tsenyurt.csdm.repository.RssItemRepository;
-import com.tsenyurt.csdm.service.GraphQlDataService;
-import com.tsenyurt.csdm.view.RssItemView;
+import java.util.*;
+import java.util.stream.*;
+
+import com.tsenyurt.csdm.domain.*;
+import com.tsenyurt.csdm.repository.*;
+import com.tsenyurt.csdm.service.*;
+import com.tsenyurt.csdm.view.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +31,8 @@ public class GraphQlDataServiceImpl implements GraphQlDataService, GraphQLQueryR
 
   public List<RssItemView> allRSSItems() {
     List<RSSItem> rssItemList = repository.findAll();
-
-    List<RssItemView> rssItemViewList =
-        rssItemList.stream().map(RSSItem::convertToView).collect(Collectors.toList()).stream()
-            .sorted(Comparator.comparing(RssItemView::getPublication).reversed())
-            .collect(Collectors.toList());
-
-    return rssItemViewList;
+    return rssItemList.stream().map(RSSItem::convertToView).collect(Collectors.toList()).stream()
+        .sorted(Comparator.comparing(RssItemView::getPublication).reversed())
+        .collect(Collectors.toList());
   }
 }

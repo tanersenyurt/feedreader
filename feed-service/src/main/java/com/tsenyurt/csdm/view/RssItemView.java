@@ -1,10 +1,11 @@
 package com.tsenyurt.csdm.view;
 
-import com.rometools.rome.feed.synd.SyndEntry;
-import com.tsenyurt.csdm.domain.RSSItem;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.StringJoiner;
+import java.io.*;
+import java.util.*;
+
+import com.rometools.rome.feed.synd.*;
+import com.tsenyurt.csdm.domain.*;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +28,7 @@ public class RssItemView implements Serializable {
     String imageUri = "";
     StringJoiner joiner = new StringJoiner(";");
     item.getEnclosures().forEach(uri -> joiner.add(uri.getUrl()));
-    if (item.getEnclosures().size() > 0) {
+    if (!item.getEnclosures().isEmpty()) {
       imageUri = joiner.toString();
     }
 
