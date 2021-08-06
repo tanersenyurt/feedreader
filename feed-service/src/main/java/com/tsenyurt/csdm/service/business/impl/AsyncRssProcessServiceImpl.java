@@ -1,5 +1,6 @@
 package com.tsenyurt.csdm.service.business.impl;
 
+import java.security.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -46,7 +47,7 @@ public class AsyncRssProcessServiceImpl extends BaseRssProcessImpl {
             log.info(
                 String.format(
                     "ConsumerTask => for url: %s ending to process", rssItemView.getUrl()));
-            Thread.sleep(new Random().nextInt(1500));
+            Thread.sleep(new SecureRandom().nextInt(1500));
           }
         }catch (InterruptedException e) {
           log.error( "Interrupted!", e);
