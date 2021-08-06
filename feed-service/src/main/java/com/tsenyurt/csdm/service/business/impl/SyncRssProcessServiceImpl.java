@@ -26,7 +26,7 @@ public class SyncRssProcessServiceImpl extends BaseRssProcessImpl {
   public void process(List<RssItemView> rssItemViewList) {
     try {
       List<String> urlLists =
-          rssItemViewList.stream().map(rssItemToUrl).collect(Collectors.toList());
+          rssItemViewList.stream().map(RSS_ITEM_TO_URL).collect(Collectors.toList());
       List<RSSItem> dbRecordsOfUrls =
           rssItemRepository.findByUrlList(urlLists); // if returns from db it means already in db
 

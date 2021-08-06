@@ -20,7 +20,8 @@ public abstract class BaseRssProcessImpl implements BaseRssProcessService {
 
   protected RssItemRepository rssItemRepository;
 
-  public static final Function<RssItemView, String> rssItemToUrl = item -> item.getUrl();
+  public static final Function<RssItemView, String> RSS_ITEM_TO_URL = RssItemView::getUrl;
+
   @Autowired
   protected BaseRssProcessImpl(final RssItemRepository rssItemRepository) {
     this.rssItemRepository = rssItemRepository;
