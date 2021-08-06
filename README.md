@@ -41,4 +41,6 @@ title, description, publication, imageUrl } }
 For static code analysis run : 
     gradle sonarqube
 
+![sonarqube sample](resources/sonar.png?raw=true)
+
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
