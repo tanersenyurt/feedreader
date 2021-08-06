@@ -11,6 +11,13 @@ when you are trying to run you must pass'a environment parameter like
 -DP_GRAPHQL_SHEME_PATH=**/*.graphql 
 
 
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=ncloc)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=coverage)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=sqale_index)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=code_smells)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+
+
 after you login the console , you must run scripts in db which is under /feed-api/src/main/resources/db_scripts.sql
 ![gradle bootRun](resources/environment.png?raw=true)
 
