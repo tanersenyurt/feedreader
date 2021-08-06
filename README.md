@@ -29,3 +29,10 @@ basic graphql from graphiql UI query { allRSSItems { url, title , publication, i
 title, description, publication, imageUrl } }
 
 ![grapql sample](resources/graphiql2.png?raw=true)
+
+For static code analysis run : 
+    gradle sonarqube
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=alert_status)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=tanersenyurt_feedreader)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
