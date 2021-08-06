@@ -1,21 +1,17 @@
 package com.tsenyurt.csdm.service.business.impl;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.tsenyurt.csdm.repository.RssItemRepository;
-import com.tsenyurt.csdm.service.util.ExceptionUtil;
-import com.tsenyurt.csdm.view.RssItemView;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadFactory;
+import java.util.*;
+import java.util.concurrent.*;
+
+import com.google.common.util.concurrent.*;
+import com.tsenyurt.csdm.repository.*;
+import com.tsenyurt.csdm.service.util.*;
+import com.tsenyurt.csdm.view.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.Service;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service("asyncRssProcessService")
 @Slf4j
@@ -52,7 +48,10 @@ public class AsyncRssProcessServiceImpl extends BaseRssProcessImpl {
                     "ConsumerTask => for url: %s ending to process", rssItemView.getUrl()));
             Thread.sleep(new Random().nextInt(1500));
           }
-        } catch (Exception e) {
+        }catch (InterruptedException e) {
+          log.error( "Interrupted!", e);
+          Thread.currentThread().interrupt();
+        }catch (Exception e) {
           log.error(
               String.format(
                   "ConsumerTask => error occur while: %s",

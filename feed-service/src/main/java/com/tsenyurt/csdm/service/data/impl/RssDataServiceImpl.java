@@ -1,30 +1,27 @@
 package com.tsenyurt.csdm.service.data.impl;
 
-import com.google.common.collect.Lists;
-import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
-import com.tsenyurt.csdm.service.data.RssDataService;
-import com.tsenyurt.csdm.view.RssItemView;
-import java.net.URL;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.net.*;
+import java.util.*;
+import java.util.stream.*;
+
+import com.google.common.collect.*;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.*;
+import com.tsenyurt.csdm.service.data.*;
+import com.tsenyurt.csdm.view.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RssDataServiceImpl implements RssDataService {
 
   @Value("${external.feed.url}")
   public String rssFeedUrl;
-
-  @Autowired
-  public RssDataServiceImpl() {}
 
   @Override
   public List<RssItemView> readFromExternalFeed() throws Exception {
@@ -42,7 +39,7 @@ public class RssDataServiceImpl implements RssDataService {
               "RssDataServiceImpl.readFromExternalFeed() during http call exception happened! Reason:[%s]",
               e.getMessage()));
     }
-    return null;
+    return Collections.emptyList();
   }
 
   @Override

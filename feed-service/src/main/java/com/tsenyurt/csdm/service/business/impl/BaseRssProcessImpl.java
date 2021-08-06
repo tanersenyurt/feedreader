@@ -1,15 +1,17 @@
 package com.tsenyurt.csdm.service.business.impl;
 
-import com.tsenyurt.csdm.domain.RSSItem;
-import com.tsenyurt.csdm.repository.RssItemRepository;
-import com.tsenyurt.csdm.service.business.BaseRssProcessService;
-import com.tsenyurt.csdm.service.util.ExceptionUtil;
-import com.tsenyurt.csdm.view.RssItemView;
-import java.util.function.Function;
+import java.util.function.*;
+
+import com.tsenyurt.csdm.domain.*;
+import com.tsenyurt.csdm.repository.*;
+import com.tsenyurt.csdm.service.business.*;
+import com.tsenyurt.csdm.service.util.*;
+import com.tsenyurt.csdm.view.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -18,10 +20,9 @@ public abstract class BaseRssProcessImpl implements BaseRssProcessService {
 
   protected RssItemRepository rssItemRepository;
 
-  public static Function<RssItemView, String> rssItemToUrl = item -> item.getUrl();
-
+  public static final Function<RssItemView, String> rssItemToUrl = item -> item.getUrl();
   @Autowired
-  public BaseRssProcessImpl(final RssItemRepository rssItemRepository) {
+  protected BaseRssProcessImpl(final RssItemRepository rssItemRepository) {
     this.rssItemRepository = rssItemRepository;
   }
 

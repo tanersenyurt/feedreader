@@ -31,8 +31,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @ToString(of = {"url", "title"})
 public class RSSItem implements Serializable {
 
-  public static final String DD_MM_YYYY_HH_MM_DATE_FORMAT = "dd.MM.yyyy HH:mm";
-
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rssitem_seq_gen")
   @SequenceGenerator(name = "rssitem_seq_gen", sequenceName = "RSS_ITEM_SEQ", allocationSize = 1)
@@ -64,21 +62,5 @@ public class RSSItem implements Serializable {
         .updateTime(it.getUpdateTime())
         .imageUrl(it.getImageUrl())
         .build();
-  }
-
-  public String getPublicationAsString() {
-    if (publication != null) {
-      SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
-      return sdf.format(publication);
-    }
-    return "";
-  }
-
-  public String getUpdateTimeAsString() {
-    if (updateTime != null) {
-      SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY_HH_MM_DATE_FORMAT);
-      return sdf.format(updateTime);
-    }
-    return "";
   }
 }
