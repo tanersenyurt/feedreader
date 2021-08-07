@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.flywaydb.flyway" version "7.12.1"
     id 'java'
 }
 
@@ -11,6 +12,14 @@ sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
+}
+
+flyway {
+    url = 'jdbc:h2:~/rss'
+    user = 'sa'
+    password = ''
+    encoding = 'UTF-8'
+    locations = ["classpath:db/migration"];
 }
 
 dependencies {
@@ -44,5 +53,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+flywayMigrate.dependsOn classes
 
 

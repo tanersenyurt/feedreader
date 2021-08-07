@@ -7,8 +7,6 @@
 * To access h2 embedded db  : [{host}:{port}/h2-console](http://localhost:8080/h2-console)
 * To access Graphiql UI     : [{host}:{port}/graphiql](http://localhost:8080/graphiql)
 
-when you are trying to run you must pass'a environment parameter like
--DP_GRAPHQL_SHEME_PATH=**/*.graphql 
 
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
@@ -19,7 +17,15 @@ when you are trying to run you must pass'a environment parameter like
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
 [![Duplicated Lines](https://sonarcloud.io/api/project_badges/measure?project=tanersenyurt_feedreader&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
 
-after you login the console , you must run scripts in db which is under /feed-api/src/main/resources/db_scripts.sql
+first of all we have to run command to create schema and table that are required to run app, the migration files stays under the resources/db/migrate folder in the main project folder
+
+     gradle flywayMigrate
+
+when you are trying to run you must pass'a environment parameter like
+
+     -DP_GRAPHQL_SHEME_PATH=**/*.graphql
+
+
 ![gradle bootRun](resources/environment.png?raw=true)
 
 while application up and running 

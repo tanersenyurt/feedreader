@@ -23,3 +23,13 @@ sonarqube {
 }
 apply plugin: 'org.sonarqube'
 
+subprojects {
+    task sayHello {
+        doLast { println "Hello from ${project.name}" }
+    }
+    task prt {
+        doFirst{
+            sourceSets.main.runtimeClasspath.each { println it}
+        }
+    }
+}
