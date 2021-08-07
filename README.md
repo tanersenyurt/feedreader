@@ -49,4 +49,14 @@ For static code analysis run :
 
 ![sonarqube sample](resources/sonar.png?raw=true)
 
+
+Whenever project gets commit, system builds the code with github actions and heroku get build via webhook , sonarcloud checks for the static code analysis 
+
+![sonarqube sample](resources/heroku.png?raw=true)
+Deployed code can be reached from below link ( After some time left heroku can down the link because all system build on free services)
+
+     https://tsenyurt-test-app.herokuapp.com/rSSItems
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=tanersenyurt_feedreader)
+![example workflow](https://github.com/tanersenyurt/feedreader/actions/workflows/gradle.yml/badge.svg)
