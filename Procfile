@@ -1,0 +1,1 @@
+web: java -jar feed-api/build/libs/feed-api-0.0.1-SNAPSHOT.jar
