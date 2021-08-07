@@ -1,13 +1,17 @@
 package com.tsenyurt.csdm.service.business.impl;
 
+import static com.tsenyurt.csdm.service.business.impl.BaseRssProcessImpl.*;
+
 import java.util.*;
 import java.util.stream.*;
 
 import com.tsenyurt.csdm.domain.*;
 import com.tsenyurt.csdm.repository.*;
+import com.tsenyurt.csdm.service.business.*;
 import com.tsenyurt.csdm.view.*;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service("syncRssProcessService")
 @RequiredArgsConstructor
 @Slf4j
-public class SyncRssProcessServiceImpl extends BaseRssProcessImpl {
+@ConditionalOnExpression("'${feed.process.type}'.equals('SYNC')")
+public class SyncRssProcessServiceImpl implements RssProcessService {
 
-  @Autowired
-  public SyncRssProcessServiceImpl(RssItemRepository rssItemRepository) {
-    super(rssItemRepository);
-  }
+  private final RssItemRepository rssItemRepository;
+  private final BaseRssProcess baseRssProcess;
 
   @Override
+  @Transactional
   public void process(List<RssItemView> rssItemViewList) {
     try {
       List<String> urlLists =
@@ -45,7 +49,7 @@ public class SyncRssProcessServiceImpl extends BaseRssProcessImpl {
               String.format(
                   "SyncRssProcessServiceImpl.process => for url: %s starting to process",
                   item.getUrl()));
-          processRssItem(item);
+          baseRssProcess.processRssItem(item);
           log.info(
               String.format(
                   "SyncRssProcessServiceImpl.process => for url: %s ending to process",

@@ -16,24 +16,19 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public abstract class BaseRssProcessImpl implements BaseRssProcessService {
+public class BaseRssProcessImpl implements BaseRssProcess{
 
-  protected RssItemRepository rssItemRepository;
+  private final RssItemRepository rssItemRepository;
 
   public static final Function<RssItemView, String> RSS_ITEM_TO_URL = RssItemView::getUrl;
 
-  @Autowired
-  protected BaseRssProcessImpl(final RssItemRepository rssItemRepository) {
-    this.rssItemRepository = rssItemRepository;
-  }
-
-  protected void updateRssItemInfos(RssItemView rssItemView, RSSItem item) {
+  public void updateRssItemInfos(RssItemView rssItemView, RSSItem item) {
     item.setDescription(rssItemView.getDescription());
     item.setTitle(rssItemView.getTitle());
     item.setUpdateTime(rssItemView.getUpdateTime());
   }
 
-  protected void processRssItem(RssItemView rssItemView) {
+  public void processRssItem(RssItemView rssItemView) {
     try {
       RSSItem item = rssItemRepository.findByUrl(rssItemView.getUrl());
       if (item == null) // item must save
