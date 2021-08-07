@@ -20,6 +20,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.rometools/rome
     implementation group: 'com.rometools', name: 'rome', version: '1.16.0'
     implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.postgresql:postgresql:42.1.4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'

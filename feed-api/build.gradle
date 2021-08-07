@@ -35,7 +35,7 @@ dependencies {
     //https://stackoverflow.com/questions/2729027/java-library-for-reading-rss-and-atom-feeds
     // https://mvnrepository.com/artifact/com.rometools/rome
     implementation group: 'com.rometools', name: 'rome', version: '1.16.0'
-
+    implementation 'org.postgresql:postgresql:42.1.4'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     compileOnly 'org.projectlombok:lombok'
